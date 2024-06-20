@@ -7,7 +7,7 @@ import "@matterlabs/hardhat-zksync-verify";
 
 // dynamically changes endpoints for local tests
 const zkSyncTestnet = {
-    url: "https://rpc.supersonic.bvm.network",
+    url: "https://rpc.iron-chain-bank.l2aas.com/",
     ethNetwork: "https://tc-node-auto.regtest.trustless.computer",
     zksync: true,
 };
