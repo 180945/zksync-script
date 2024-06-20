@@ -14,7 +14,7 @@ npx hardhat compile
 
 ## Deploy contract to zkSync Era Goerli Network with artifacts-zk from compilation
 
-```shell
+```shell 
 npx hardhat deploy-zksync --script deploy-simple-storage.ts
 ```
 
