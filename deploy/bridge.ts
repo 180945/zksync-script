@@ -26,17 +26,17 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // Create deployer object and load the artifact of the contract you want to deploy.
     const deployer = new Deployer(hre, wallet);
-    const upgradeWallet = "0xe7143319283d0b5b234aea046769d40bee5c6d43";
-    const operator = "0x00ac68bF447A04e2e6ac78d25c8CBeF9EA397b12";
+    const upgradeWallet = "0x54b3DBA467C9Dbb916EF4D6AedaFa19C4Fef8258";
+    const operator = "0x9699b31b25D71BDA4819bBe66244E9130cEE62b7";
 
-    // deploy safe contract
+    // // deploy safe contract
     // const safeImp = await DeployContract(deployer, "Safe", []);
-
-    // Initialize the contract interface
-    const safeABI = new ethers.utils.Interface(SafeJson.abi);
-    const owners = ["0x4A0575ea18743A9e07c7D6DB45C0e6bE306605da","0xc1bd11B445731849340539C196241a661affE004","0x0527FcC3e0be62b84707a430B1Aa46b775fe015B","0x9Be2b21B7f78529433021090Cb5941a89E7e0649","0x7FD3B0a8F0441e1a27A4F65FCE9869DEC1D83102","0x4008cE88De080B7B4D99ABA0284FDfbCAC3d1f99","0xbe4C3c99E86ACc9a0831Bf49CE45Ab6F229E111A"];
-    const calldata = safeABI.encodeFunctionData("setup", [owners, 1, "0x0000000000000000000000000000000000000000", "0x", "0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000", 0, "0x0000000000000000000000000000000000000000"]);
-    // deploy safe proxy
+    //
+    // // Initialize the contract interface
+    // const safeABI = new ethers.utils.Interface(SafeJson.abi);
+    // const owners = ["0x54b23c919ac8C78EC8a8D8330BBd546c4E697793","0x8166e29b0b79F1b9056378611d2eC5744A92Ff29","0x1C7Cc916D4cDaF6A9c72741F26BD63e3Ab1bC752","0x2eaABBd0046907D53251498354Ac802D5fecc5C5","0x9BdBE90cFF247912a39da3F5dc847Babf3E5ab74","0x550347D3280b87936555fFA32A426B00Ea169F2f","0x8eD3db5CcD72d4766470a9E83B6dE93b4AbCA275"];
+    // const calldata = safeABI.encodeFunctionData("setup", [owners, 1, "0x0000000000000000000000000000000000000000", "0x", "0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000", 0, "0x0000000000000000000000000000000000000000"]);
+    // // deploy safe proxy
     // const safeContract = await DeployContract(deployer, "TransparentUpgradeableProxy", [
     //     safeImp.address,
     //     upgradeWallet,
@@ -62,31 +62,43 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // console.log("======================");
 
     // deploy wtoken contract
-    const wTokenImp = await DeployContract(deployer, "contracts/bridge/WToken.sol:WrappedToken", []);
+    // const wTokenImp = await DeployContract(deployer, "contracts/bridge/WToken.sol:WrappedToken", []);
 
     // deploy wtoken proxy
     const wtokenABI = new ethers.utils.Interface(WTokenJson.abi);
-    const calldata3 = wtokenABI.encodeFunctionData("initialize", ["0x3e3Cc9BC371bB7F17661E7370d19dF137e7DFD83", "Ethereum", "ETH"]);
+    // const calldata3 = wtokenABI.encodeFunctionData("initialize", [bridge.address, "Ethereum", "ETH"]);
+    //
+    // const eth = await DeployContract(deployer, "TransparentUpgradeableProxy", [
+    //     wTokenImp.address,
+    //     upgradeWallet,
+    //     calldata3
+    // ]);
+    // console.log("======================");
+    // console.log("eth contract addr: " + eth.address);
+    // console.log("======================");
 
-    const eth = await DeployContract(deployer, "TransparentUpgradeableProxy", [
-        wTokenImp.address,
-        upgradeWallet,
-        calldata3
-    ]);
-    console.log("======================");
-    console.log("eth contract addr: " + eth.address);
-    console.log("======================");
-
-    const calldata4 = wtokenABI.encodeFunctionData("initialize", ["0x3e3Cc9BC371bB7F17661E7370d19dF137e7DFD83", "Bitcoin", "BTC"]);
+    const calldata4 = wtokenABI.encodeFunctionData("initialize", ["0x3e3Cc9BC371bB7F17661E7370d19dF137e7DFD83", "BSC-USDT", "BSC-USDT"]);
 
     const bitcoin = await DeployContract(deployer, "TransparentUpgradeableProxy", [
-        wTokenImp.address,
+        "0xba71888b6d0185604d820e25e2500f1a0016aa15",
         upgradeWallet,
         calldata4
     ]);
     console.log("======================");
-    console.log("bitcoin contract addr: " + bitcoin.address);
+    console.log("BSC-USDT contract addr: " + bitcoin.address);
     console.log("======================");
+
+    const calldata5 = wtokenABI.encodeFunctionData("initialize", ["0x3e3Cc9BC371bB7F17661E7370d19dF137e7DFD83", "BSC-BNB", "BSC-BNB"]);
+
+    const bscbnb = await DeployContract(deployer, "TransparentUpgradeableProxy", [
+        "0xba71888b6d0185604d820e25e2500f1a0016aa15",
+        upgradeWallet,
+        calldata5
+    ]);
+    console.log("======================");
+    console.log("BSC-BNB contract addr: " + bscbnb.address);
+    console.log("======================");
+
 
 }
 

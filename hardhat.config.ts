@@ -1,80 +1,59 @@
 import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+import '@openzeppelin/hardhat-upgrades';
+import "@matterlabs/hardhat-zksync";
 
-import "@matterlabs/hardhat-zksync-deploy";
-import "@matterlabs/hardhat-zksync-solc";
-import "@matterlabs/hardhat-zksync-verify";
-// import "@matterlabs/hardhat-zksync-upgradable";
+import 'dotenv/config'
 
 // dynamically changes endpoints for local tests
 const zkSyncTestnet = {
-    url: "https://rpc.iron-chain-bank.l2aas.com/",
+    url: "https://rpc.zkfractal.bvm.network",
     ethNetwork: "https://tc-node-auto.regtest.trustless.computer",
     zksync: true,
+    verifyURL: 'https://contract-verification.supersonic.bvm.network/',
 };
 
+let localTestMnemonic = "test test test test test test test test test test test junk";
+
+
 const config: HardhatUserConfig = {
-  zksolc: {
-    version: "1.4.0",
-    compilerSource: "binary",
-    settings: {
-        libraries: {
-            "contracts/v2-periphery/UniswapRouterV2.sol": {
-                "TransferHelper": "0x13706Afd344d905BB9Cb50752065a67Fa8d09c70",
-                "UniswapV2Library": "0xb9FeC233026C2EE67BAA2BaB669B6daD20a2747D",
-            }
-        },
-    },
-  },
-  defaultNetwork: "zkSyncTestnet",
-  networks: {
-    hardhat: {
-      zksync: false,
-    },
-    zkSyncTestnet,
-  },
-  solidity: {
+    solidity: {
       compilers: [
-          {
-              version: "0.8.17",
-          },
-          {
-              version: "0.5.16",
-              settings: {
-                  optimizer: {
-                      enabled: true,
-                      runs: 999999,
-                  },
-              },
-          },
-          {
-              version: "0.6.6",
-              settings: {
-                  optimizer: {
-                      enabled: true,
-                      runs: 999999,
-                  },
-              },
-          },
-          {
-              version: "0.4.18",
-          },
-          {
-              version: '0.8.19',
-              settings: {
-                  optimizer: {
-                      enabled: true,
-                      runs: 200,
-                  },
-                  viaIR: true,
-                  outputSelection: {
-                      '*': {
-                          '*': ['storageLayout', 'evm.gasEstimates']
-                      }
-                  }
-              },
-          },
-      ],
-  },
-};
+        { version: "0.8.19", settings: { optimizer: { enabled: true, runs: 2000000, viaIR: true } } },
+        { version: "0.8.20", settings: { optimizer: { enabled: true, runs: 2000000 }, evmVersion: 'paris', viaIR: true } },
+      ]
+    },
+    defaultNetwork: "zkSyncTestnet",
+    networks: {
+      hardhat: {
+        blockGasLimit: 20_500_000_000,
+        accounts: {
+          count: 20,
+          accountsBalance: "20000000000000000000000000",
+        },
+        allowUnlimitedContractSize: true,
+      },
+      localhost: {
+        url: "http://localhost:8545",
+        accounts: {
+          mnemonic: localTestMnemonic,
+          count: 10,
+        },
+        timeout: 500_000_000,
+        blockGasLimit: 2_500_000_000,
+      },
+      zkSyncTestnet,
+    },
+    paths: {
+      sources: './contracts',
+      tests: './tests',
+      cache: './cache',
+      artifacts: './artifacts',
+    },
+    zksolc: {
+      settings: { 
+      }
+    }
+  };
 
 export default config;

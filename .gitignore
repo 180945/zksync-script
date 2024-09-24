@@ -3,3 +3,5 @@ artifacts-zk
 cache-zk
 yarn.lock
 .idea
+package-lock.json
+deployments-zk
