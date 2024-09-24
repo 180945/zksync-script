@@ -2,7 +2,7 @@
  *Submitted for verification at Etherscan.io on 2020-06-05
 */
 
-pragma solidity 0.6.6;
+pragma solidity ^0.8.0;
 
 contract WETH9 {
     string public name     = "Wrapped Ether";
@@ -58,7 +58,7 @@ contract WETH9 {
     {
         require(balanceOf[src] >= wad);
 
-        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
+        if (src != msg.sender && allowance[src][msg.sender] != type(uint).max) {
             require(allowance[src][msg.sender] >= wad);
             allowance[src][msg.sender] -= wad;
         }
